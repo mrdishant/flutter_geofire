@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "656634362690",
+    "firebase_url": "https://geofiretest-680ec.firebaseio.com",
+    "project_id": "geofiretest-680ec",
+    "storage_bucket": "geofiretest-680ec.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:656634362690:android:84f5845e300a769b",
+        "android_client_info": {
+          "package_name": "in.appyflow.geofireexample"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "656634362690-o66hjcev1crf90l50gcq0o05rqmlv1pf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAcJL1MgraJ8qW4XU7W2hzZ483rS1eJXlw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
