@@ -1,5 +1,5 @@
 name: geofire_example
-description: Demonstrates how to use the geofire plugin.
+description: Demonstrates how to use the flutter_geofire plugin.
 publish_to: 'none'
 
 environment:

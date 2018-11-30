@@ -1,8 +1,9 @@
 name: flutter_geofire
 description: A Flutter plugin to get the realtime updates of places nearby.
-version: 0.0.1
+version: 0.0.2
 author: "Dishant Mahajan <mr.dishantmahajan@gmail.com>"
-homepage: "https://appyflow.in/"
+homepage: "https://github.com/mrdishant/flutter_geofire"
+
 
 environment:
   sdk: ">=2.0.0-dev.68.0 <3.0.0"

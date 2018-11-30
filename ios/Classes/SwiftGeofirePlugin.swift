@@ -54,7 +54,7 @@ public class SwiftGeofirePlugin: NSObject, FlutterPlugin {
         
         let id = arguements!["id"] as! String
         
-        
+
         geoFire?.removeKey(id) { (error) in
             if (error != nil) {
                 print("An error occured: \(String(describing: error))")

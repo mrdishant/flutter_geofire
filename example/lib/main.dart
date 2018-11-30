@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_geofire/geofire.dart';
+import 'package:flutter_geofire/flutter_geofire.dart';
 
 void main() => runApp(MyApp());
 
