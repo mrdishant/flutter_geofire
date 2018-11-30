@@ -56,7 +56,11 @@ To remove a location and delete it from the database simply pass the location's 
 
     print(response);                
 
+####Contributing
+if you want to contribute to GeoFire, clone the repository and just start making pull requests.
 
+    git clone https://github.com/mrdishant/flutter_geofire
 
 #####This plugin is in development suggestions are welcome. Happy Coding!!!
+
 
