@@ -1,7 +1,6 @@
 package in.appyflow.geofire;
 
-import android.view.View;
-import android.widget.Toast;
+import android.webkit.GeolocationPermissions;
 
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
@@ -12,31 +11,44 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.flutter.plugin.common.MethodCall;
+import io.flutter.plugin.common.EventChannel;
+import io.flutter.plugin.common.PluginRegistry.Registrar;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
-import io.flutter.plugin.common.PluginRegistry.Registrar;
+import io.flutter.plugin.common.MethodCall;
 
 /**
  * GeofirePlugin
  */
-public class GeofirePlugin implements MethodCallHandler {
-
-    GeoFire geoFire;
-    DatabaseReference databaseReference;
+public class GeofirePlugin implements MethodCallHandler, EventChannel.StreamHandler {
 
     /**
      * Plugin registration.
      */
     public static void registerWith(Registrar registrar) {
         final MethodChannel channel = new MethodChannel(registrar.messenger(), "geofire");
-        channel.setMethodCallHandler(new GeofirePlugin());
+        final EventChannel stream_onEvent = new EventChannel( registrar.messenger(),"geofirestream");
+        GeofirePlugin instance = new GeofirePlugin();
+        channel.setMethodCallHandler(instance);
+        stream_onEvent.setStreamHandler(instance);
     }
+
+    private GeoFire geoFire;
+    private DatabaseReference databaseReference;
+    private GeoQuery circleQuery;
+    private Boolean listening = false;
+    private EventChannel.EventSink eventSink;
+
 
     @Override
     public void onMethodCall(MethodCall call, final Result result) {
@@ -49,7 +61,6 @@ public class GeofirePlugin implements MethodCallHandler {
 
             databaseReference = FirebaseDatabase.getInstance().getReference(call.argument("path").toString());
             geoFire = new GeoFire(databaseReference);
-
             if (geoFire.getDatabaseReference() != null) {
                 result.success(true);
             } else
@@ -87,13 +98,11 @@ public class GeofirePlugin implements MethodCallHandler {
 
 
         }else if (call.method.equals("getLocation")) {
-
             geoFire.getLocation(call.argument("id").toString(),new LocationCallback() {
                 @Override
                 public void onLocationResult(String key, GeoLocation location) {
                     HashMap<String ,Object> map=new HashMap<>();
                     if (location != null) {
-
 
                         map.put("lat",location.latitude);
                         map.put("lng",location.longitude);
@@ -120,50 +129,93 @@ public class GeofirePlugin implements MethodCallHandler {
 
 
         } else if (call.method.equals("queryAtLocation")) {
-            geoFireArea(Double.parseDouble(call.argument("lat").toString()), Double.parseDouble(call.argument("lng").toString()), result, Double.parseDouble(call.argument("radius").toString()));
+            if (circleQuery == null) {
+                Double lat = Double.parseDouble(call.argument("lat").toString());
+                Double lng = Double.parseDouble(call.argument("lng").toString());
+                Double radius = Double.parseDouble(call.argument("radius").toString());
+                GeoLocation location = new GeoLocation(lat, lng);
+                this.circleQuery = geoFire.queryAtLocation(location, radius);
+//                instance.circleQuery = this.circleQuery;
+            }//otherwise it is already setup!
+            result.success(true);
+        } else if (call.method.equals("updateLocation")) {
+            Double lat = Double.parseDouble(call.argument("lat").toString());
+            Double lng = Double.parseDouble(call.argument("lng").toString());
+            Double radius = Double.parseDouble(call.argument("radius").toString());
+            GeoLocation location = new GeoLocation(lat, lng);
+            this.circleQuery.setCenter(location);
+            this.circleQuery.setRadius(radius);
+//            instance.circleQuery.setCenter(location);
+//            instance.circleQuery.setRadius(radius);
+            result.success(true);
         } else {
             result.notImplemented();
         }
     }
 
+    @Override
+    public void onListen(Object o, final EventChannel.EventSink events) {
+        this.eventSink = events;
+        if (!listening && circleQuery != null){
+            listening = true;
+            try {
+                this.circleQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
+                    @Override
+                    public void onKeyEntered(String key, GeoLocation location) {
+                        Map<String,Object> data = new HashMap<String, Object>();
+                        data.put("key", key);
+                        data.put("lat", location.latitude);
+                        data.put("long", location.longitude);
+                        data.put("event", "ENTERED");
 
-    private void geoFireArea(double latitude, double longitude, final Result result,double radius) {
-        try {
+                        byte[] jsonData = new JSONObject(data).toString().getBytes();
+                        eventSink.success(jsonData);
+                    }
 
-            final ArrayList<String> arrayListKeys = new ArrayList<>();
-            final GeoQuery geoQuery = geoFire.queryAtLocation(new GeoLocation(latitude, longitude), radius);
-            geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
-                @Override
-                public void onKeyEntered(String key, GeoLocation location) {
-                    arrayListKeys.add(key);
-                }
+                    @Override
+                    public void onKeyExited(String key) {
+                        Map<String,Object> data = new HashMap<String, Object>();
+                        data.put("key", key);
+                        data.put("event", "EXITED");
 
-                @Override
-                public void onKeyExited(String key) {
-                }
+                        byte[] jsonData = new JSONObject(data).toString().getBytes();
+                        eventSink.success(jsonData);
+                    }
 
-                @Override
-                public void onKeyMoved(String key, GeoLocation location) {
-                }
+                    @Override
+                    public void onKeyMoved(String key, GeoLocation location) {
+                    }
 
-                @Override
-                public void onGeoQueryReady() {
-                    geoQuery.removeAllListeners();
-                    result.success(arrayListKeys);
-                }
+                    @Override
+                    public void onGeoQueryReady() {
+                        
+                    }
 
-                @Override
-                public void onGeoQueryError(DatabaseError error) {
-
-                    result.error("Error ","GeoQueryError",error);
-
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-
-            result.error("Error ","General Error",e);
+                    @Override
+                    public void onGeoQueryError(DatabaseError error) {
+                        Map<String,Object> data = new HashMap<String, Object>();
+                        data.put("error", error);
+                        data.put("event", "ERROR");
+                        byte[] jsonData = new JSONObject(data).toString().getBytes();
+                        eventSink.success(jsonData);
+                    }
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+                Map<String,Object> data = new HashMap<String, Object>();
+                data.put("error", e);
+                data.put("event", "ERROR");
+                String jsonData = new JSONObject(data).toString();
+                System.out.printf(jsonData);
+                eventSink.success(jsonData);
+            }
         }
     }
 
+    @Override
+    public void onCancel(Object o) {
+        this.eventSink = null;
+        this.circleQuery.removeAllListeners();
+        listening = false;
+    }
 }

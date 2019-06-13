@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_geofire/flutter_geofire.dart';
+// import 'package:flutter_geofire/flutter_geofire.dart';
 
 void main() => runApp(MyApp());
 
@@ -22,15 +22,15 @@ class _MyAppState extends State<MyApp> {
 
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlatformState() async {
-    String pathToReference = "Sites";
+    // String pathToReference = "Sites";
 
     //Intializing geoFire
-    Geofire.initialize(pathToReference);
+    // Geofire.initialize(pathToReference);
 
     List<String> response;
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
-      response = await Geofire.queryAtLocation(30.730743, 76.774948, 5);
+      // response = await Geofire.queryAtLocation(30.730743, 76.774948, 5);
     } on PlatformException {
 //      response = 'Failed to get platform version.';
     }
@@ -131,31 +131,31 @@ class _MyAppState extends State<MyApp> {
   }
 
   void setLocation() async {
-    bool response = await Geofire.setLocation(
-        new DateTime.now().millisecondsSinceEpoch.toString(),
-        30.730743,
-        76.774948);
+    // bool response = await Geofire.setLocation(
+    //     new DateTime.now().millisecondsSinceEpoch.toString(),
+    //     30.730743,
+    //     76.774948);
 
-    print(response);
+    // print(response);
   }
 
   void setLocationFirst() async {
-    bool response =
-        await Geofire.setLocation("AsH28LWk8MXfwRLfVxgx", 30.730743, 76.774948);
+    // bool response =
+        // await Geofire.setLocation("AsH28LWk8MXfwRLfVxgx", 30.730743, 76.774948);
 
-    print(response);
+    // print(response);
   }
 
   void removeLocation() async {
-    bool response = await Geofire.removeLocation("AsH28LWk8MXfwRLfVxgx");
+    // bool response = await Geofire.removeLocation("AsH28LWk8MXfwRLfVxgx");
 
-    print(response);
+    // print(response);
   }
 
   void getLocation() async {
-    Map<String, dynamic> response =
-        await Geofire.getLocation("AsH28LWk8MXfwRLfVxgx");
+    // Map<String, dynamic> response =
+    //     await Geofire.getLocation("AsH28LWk8MXfwRLfVxgx");
 
-    print(response);
+    // print(response);
   }
 }
