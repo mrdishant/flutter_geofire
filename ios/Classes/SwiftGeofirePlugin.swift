@@ -136,7 +136,7 @@ public class SwiftGeofirePlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
                 do{
                     let data: [String:Any] = ["key": key, "lat": location.coordinate.latitude, "long": location.coordinate.longitude, "event": "ENTERED"]
                     let jsonData = try JSONSerialization.data(withJSONObject: data, options: .prettyPrinted)
-                    print(jsonData)
+//                     print(jsonData)
                     self.eventSink?(jsonData)
                 }catch{
 //                    let data: [String:Any] = ["error": "DBError", "event": "ERROR"];
@@ -149,7 +149,7 @@ public class SwiftGeofirePlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
                 do{
                     let data: [String:Any] = ["key": key, "lat": location.coordinate.latitude, "long": location.coordinate.longitude, "event": "EXITED"]
                     let jsonData = try JSONSerialization.data(withJSONObject: data, options: .prettyPrinted)
-                    print(jsonData)
+//                     print(jsonData)
                     self.eventSink?(jsonData)
                 }catch{
 //                    let data: [String:Any] = ["error": "DBError", "event": "ERROR"];
