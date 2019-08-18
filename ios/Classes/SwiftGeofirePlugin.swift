@@ -4,15 +4,29 @@ import GeoFire
 import FirebaseDatabase
 
 
-public class SwiftGeofirePlugin: NSObject, FlutterPlugin {
+public class SwiftGeofirePlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
     
     var geoFireRef:DatabaseReference?
     var geoFire:GeoFire?
+    private var eventSink: FlutterEventSink?
+
+
     
   public static func register(with registrar: FlutterPluginRegistrar) {
     let channel = FlutterMethodChannel(name: "geofire", binaryMessenger: registrar.messenger())
     let instance = SwiftGeofirePlugin()
+
+    let eventChannel = FlutterEventChannel(name: "geofireStream",
+                                                  binaryMessenger: registrar.messenger())
+    
+    
+    
+    
+    eventChannel.setStreamHandler(instance)
+    
     registrar.addMethodCallDelegate(instance, channel: channel)
+    
+    
   }
 
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
@@ -114,18 +128,75 @@ public class SwiftGeofirePlugin: NSObject, FlutterPlugin {
         
         _ = circleQuery?.observe(.keyEntered, with: { (parkingKey, location) in
             
+            var param=[String:Any]()
+            
+            param["callBack"] = "onKeyEntered"
+            param["key"] = parkingKey
+            param["latitude"] = location.coordinate.latitude
+            param["longitude"] = location.coordinate.longitude
+            
             key.append(parkingKey)
             print("Key is \(parkingKey)")
+            
+            self.eventSink!(param)
+            
+        })
+        
+        _ = circleQuery?.observe(.keyMoved, with: { (parkingKey, location) in
+            
+            var param=[String:Any]()
+            
+            param["callBack"] = "onKeyMoved"
+            param["key"] = parkingKey
+            param["latitude"] = location.coordinate.latitude
+            param["longitude"] = location.coordinate.longitude
+            
+            key.append(parkingKey)
+            print("Key is \(parkingKey)")
+            
+            self.eventSink!(param)
+            
+        })
+        
+        _ = circleQuery?.observe(.keyExited, with: { (parkingKey, location) in
+            
+            var param=[String:Any]()
+            
+            param["callBack"] = "onKeyExited"
+            param["key"] = parkingKey
+            param["latitude"] = location.coordinate.latitude
+            param["longitude"] = location.coordinate.longitude
+            
+            self.eventSink!(param)
+            
         })
         
         
         circleQuery?.observeReady {
-            result(key)
+            
+            var param=[String:Any]()
+            
+            param["callBack"] = "onGeoQueryReady"
+            param["result"] = key
+            self.eventSink!(key)
             
         }
     }
     
   }
+
+
+   public func onListen(withArguments arguments: Any?,
+                       eventSink: @escaping FlutterEventSink) -> FlutterError? {
+    self.eventSink = eventSink
+    return nil
+  }
+
+  public func onCancel(withArguments arguments: Any?) -> FlutterError? {
+      eventSink = nil
+      return nil
+    }
+
 
 
 }

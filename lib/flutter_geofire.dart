@@ -5,10 +5,14 @@ import 'package:flutter/services.dart';
 class Geofire {
   static const MethodChannel _channel = const MethodChannel('geofire');
 
-//  static Future<String> get platformVersion async {
-//    final String version = await _channel.invokeMethod('getPlatformVersion');
-//    return version;
-//  }
+  static const EventChannel _stream = const EventChannel('geofireStream');
+
+  static const onKeyEntered = "onKeyEntered";
+  static const onGeoQueryReady = "onGeoQueryReady";
+  static const onKeyMoved = "onKeyMoved";
+  static const onKeyExited = "onKeyExited";
+
+  static Stream<dynamic> _queryAtLocation;
 
   static Future<bool> initialize(String path) async {
     final dynamic r = await _channel
@@ -44,16 +48,28 @@ class Geofire {
     return location;
   }
 
-  static Future<List<String>> queryAtLocation(
-      double lat, double lng, double radius) async {
-    final List<dynamic> response = await _channel.invokeMethod(
-        'queryAtLocation', {"lat": lat, "lng": lng, "radius": radius});
-
-    List<String> r = [];
-    response.forEach((value) {
-      r.add(value.toString());
+  static Stream<dynamic> queryAtLocation(
+      double lat, double lng, double radius) {
+    _channel.invokeMethod('queryAtLocation',
+        {"lat": lat, "lng": lng, "radius": radius}).then((result) {
+      print("result" + result);
+    }).catchError((error) {
+      print("Error " + error);
     });
 
-    return r;
+    if (_queryAtLocation == null) {
+      _queryAtLocation = _stream.receiveBroadcastStream();
+    }
+    return _queryAtLocation;
+
+//    final List<dynamic> response = await _channel.invokeMethod(
+//        'queryAtLocation', {"lat": lat, "lng": lng, "radius": radius});
+//
+//    List<String> r = [];
+//    response.forEach((value) {
+//      r.add(value.toString());
+//    });
+//
+//    return r;
   }
 }

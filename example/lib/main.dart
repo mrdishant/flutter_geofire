@@ -27,10 +27,42 @@ class _MyAppState extends State<MyApp> {
     //Intializing geoFire
     Geofire.initialize(pathToReference);
 
-    List<String> response;
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
-      response = await Geofire.queryAtLocation(30.730743, 76.774948, 5);
+      Geofire.queryAtLocation(30.730743, 76.774948, 5).listen((map) {
+        print(map);
+        if (map != null) {
+          var callBack = map['callBack'];
+
+          //latitude will be retrieved from map['latitude']
+          //longitude will be retrieved from map['longitude']
+
+          switch (callBack) {
+            case Geofire.onKeyEntered:
+              keysRetrieved.add(map["key"]);
+              break;
+
+            case Geofire.onKeyExited:
+              keysRetrieved.remove(map["key"]);
+              break;
+
+            case Geofire.onKeyMoved:
+//              keysRetrieved.add(map[callBack]);
+              break;
+
+            case Geofire.onGeoQueryReady:
+//              map["result"].forEach((key){
+//                keysRetrieved.add(key);
+//              });
+
+              break;
+          }
+        }
+
+        setState(() {});
+      }).onError((error) {
+        print(error);
+      });
     } on PlatformException {
 //      response = 'Failed to get platform version.';
     }
@@ -39,10 +71,6 @@ class _MyAppState extends State<MyApp> {
     // message was in flight, we want to discard the reply rather than calling
     // setState to update our non-existent appearance.
     if (!mounted) return;
-
-    setState(() {
-      keysRetrieved = response;
-    });
   }
 
   @override
