@@ -61,15 +61,5 @@ class Geofire {
       _queryAtLocation = _stream.receiveBroadcastStream();
     }
     return _queryAtLocation;
-
-//    final List<dynamic> response = await _channel.invokeMethod(
-//        'queryAtLocation', {"lat": lat, "lng": lng, "radius": radius});
-//
-//    List<String> r = [];
-//    response.forEach((value) {
-//      r.add(value.toString());
-//    });
-//
-//    return r;
   }
 }

@@ -64,7 +64,36 @@ Retrieving a location for a single key in GeoFire happens like below:
 
 GeoFire allows you to query all keys within a geographic area using GeoQuery objects. As the locations for keys change, the query is updated in realtime and fires events letting you know if any relevant keys have moved. GeoQuery parameters can be updated later to change the size and center of the queried area.
 
-    response = await Geofire.queryAtLocation(30.730743, 76.774948, 5);
+    Geofire.queryAtLocation(30.730743, 76.774948, 5).listen((map) {
+            print(map);
+            if (map != null) {
+              var callBack = map['callBack'];
+    
+              //latitude will be retrieved from map['latitude']
+              //longitude will be retrieved from map['longitude']
+    
+              switch (callBack) {
+                case Geofire.onKeyEntered:
+                  keysRetrieved.add(map["key"]);
+                  break;
+    
+                case Geofire.onKeyExited:
+                  keysRetrieved.remove(map["key"]);
+                  break;
+    
+                case Geofire.onKeyMoved:
+                // Update your key's location
+                  break;
+    
+                case Geofire.onGeoQueryReady:
+                // All Intial Data is loaded
+                print(map['result'])
+    
+                  break;
+              }
+            }
+    
+            setState(() {});
 
 
 #### Removing a location
