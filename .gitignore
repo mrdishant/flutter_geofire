@@ -6,5 +6,5 @@
 pubspec.lock
 
 build/
-/android
-/ios
+android/
+ios/
