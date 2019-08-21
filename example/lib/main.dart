@@ -153,6 +153,21 @@ class _MyAppState extends State<MyApp> {
                   ),
                 ),
               ),
+              Padding(
+                padding: EdgeInsets.all(10.0),
+              ),
+              Center(
+                child: RaisedButton(
+                  onPressed: () {
+                    removeQueryListener();
+                  },
+                  color: Colors.blueAccent,
+                  child: Text(
+                    "Remove Query Listener",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ),
             ],
           )),
     );
@@ -176,6 +191,12 @@ class _MyAppState extends State<MyApp> {
 
   void removeLocation() async {
     bool response = await Geofire.removeLocation("AsH28LWk8MXfwRLfVxgx");
+
+    print(response);
+  }
+
+  void removeQueryListener() async {
+    bool response = await Geofire.stopListener();
 
     print(response);
   }

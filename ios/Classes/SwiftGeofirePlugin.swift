@@ -9,7 +9,7 @@ public class SwiftGeofirePlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
     var geoFireRef:DatabaseReference?
     var geoFire:GeoFire?
     private var eventSink: FlutterEventSink?
-
+    var circleQuery : GFCircleQuery?
 
     
   public static func register(with registrar: FlutterPluginRegistrar) {
@@ -81,6 +81,13 @@ public class SwiftGeofirePlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
         }
         
     }
+    else if(call.method.elementsEqual("stopListener")){
+        
+        circleQuery?.removeAllObservers()
+        
+        result(true);
+        
+    }
     
     else if(call.method.elementsEqual("getLocation")){
         
@@ -111,6 +118,7 @@ public class SwiftGeofirePlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
             }
         }
         
+        
     }
     
     
@@ -124,7 +132,7 @@ public class SwiftGeofirePlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
         
         let location:CLLocation = CLLocation(latitude: CLLocationDegrees(lat), longitude: CLLocationDegrees(lng))
         
-        let circleQuery = geoFire?.query(at: location, withRadius: radius)
+        circleQuery = geoFire?.query(at: location, withRadius: radius)
         
         _ = circleQuery?.observe(.keyEntered, with: { (parkingKey, location) in
             

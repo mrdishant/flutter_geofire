@@ -28,7 +28,7 @@ GeoFire uses the Firebase database for data storage, allowing query results to b
    
    Example: Just change the 'Sites' with your pathToReference
     
-    ''' 
+    
         {
           "rules": {
             ".read":true,
@@ -39,7 +39,7 @@ GeoFire uses the Firebase database for data storage, allowing query results to b
           }
         }   
     
-    '''
+    
     
     
 #### Setting location data
@@ -95,6 +95,12 @@ GeoFire allows you to query all keys within a geographic area using GeoQuery obj
     
             setState(() {});
 
+#### Stop Listening to Geo Query
+To remove listeners to all queries:
+
+    bool response = await Geofire.stopListener();
+
+    print(response);
 
 #### Removing a location
 To remove a location and delete it from the database simply pass the location's key to removeLocation:

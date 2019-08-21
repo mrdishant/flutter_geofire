@@ -129,7 +129,16 @@ public class GeofirePlugin implements MethodCallHandler, EventChannel.StreamHand
 
         } else if (call.method.equals("queryAtLocation")) {
             geoFireArea(Double.parseDouble(call.argument("lat").toString()), Double.parseDouble(call.argument("lng").toString()), result, Double.parseDouble(call.argument("radius").toString()));
-        } else {
+        }
+        else if (call.method.equals("stopListener")) {
+
+            if(geoQuery!=null){
+                geoQuery.removeAllListeners();
+            }
+
+            result.success(true);
+        }
+        else {
             result.notImplemented();
         }
     }
