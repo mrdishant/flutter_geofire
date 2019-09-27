@@ -188,7 +188,12 @@ public class GeofirePlugin implements MethodCallHandler, EventChannel.StreamHand
 
                     @Override
                     public void onGeoQueryReady() {
-                        
+                        System.out.println("All initial data has been loaded and events have been fired!");
+                        Map<String,Object> data = new HashMap<String, Object>();
+                        data.put("event", "GEOQUERY_READY");
+
+                        byte[] jsonData = new JSONObject(data).toString().getBytes();
+                        eventSink.success(jsonData);
                     }
 
                     @Override

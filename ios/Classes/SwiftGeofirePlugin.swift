@@ -136,27 +136,30 @@ public class SwiftGeofirePlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
                 do{
                     let data: [String:Any] = ["key": key, "lat": location.coordinate.latitude, "long": location.coordinate.longitude, "event": "ENTERED"]
                     let jsonData = try JSONSerialization.data(withJSONObject: data, options: .prettyPrinted)
-//                     print(jsonData)
                     self.eventSink?(jsonData)
                 }catch{
-//                    let data: [String:Any] = ["error": "DBError", "event": "ERROR"];
-//                    let jsonData = try JSONSerialization.data(withJSONObject: data, options: .prettyPrinted)
-//                    print(jsonData)
                     self.eventSink?("ERROR")
                 }
             })
             circleQuery?.observe(.keyExited, with: { (key, location) in
                 do{
-                    let data: [String:Any] = ["key": key, "lat": location.coordinate.latitude, "long": location.coordinate.longitude, "event": "EXITED"]
+                    let data: [String:Any] = ["key": key, "event": "EXITED"]//"lat" :location.coordinate.latitude, "long": location.coordinate.longitude, "event": "EXITED"]
                     let jsonData = try JSONSerialization.data(withJSONObject: data, options: .prettyPrinted)
-//                     print(jsonData)
                     self.eventSink?(jsonData)
                 }catch{
-//                    let data: [String:Any] = ["error": "DBError", "event": "ERROR"];
-//                    let jsonData = try JSONSerialization.data(withJSONObject: data, options: .prettyPrinted)
-//                    print(jsonData)
                     self.eventSink?("ERROR")
                 }
+            })
+            circleQuery.observeReady({
+                do{
+                    print("All initial data has been loaded and events have been fired!")
+                    let data: [String:Any] = ["event": "GEOQUERY_READY"]//location.coordinate.latitude, "long": location.coordinate.longitude, "event": "EXITED"]
+                    let jsonData = try JSONSerialization.data(withJSONObject: data, options: .prettyPrinted)
+                    self.eventSink?(jsonData)
+                }catch{
+                    self.eventSink?("ERROR")
+                }
+                
             })
         }
         return nil

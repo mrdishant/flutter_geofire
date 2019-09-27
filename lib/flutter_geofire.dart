@@ -23,6 +23,7 @@ class Geofire {
   final EventChannel _eventChannel;
   StreamController<dynamic> _onKeyEntered = new StreamController.broadcast();
   StreamController<dynamic> _onKeyExited = new StreamController.broadcast(); 
+  StreamController<dynamic> _onObserveReady = new StreamController.broadcast(); 
 
   Future<bool> initialize(String path) async {
     final dynamic r = await _methodChannel.invokeMethod('GeoFire.start', <String, dynamic>{"path": path});
@@ -77,6 +78,10 @@ class Geofire {
     return _onKeyExited.stream;
   }
 
+  Stream<dynamic> get onObserveReady {
+    return _onObserveReady.stream;
+  }
+
   dynamic _parseStream(Object event) {
     var jsonData = new String.fromCharCodes(event);
     var data = json.decode(jsonData);
@@ -84,6 +89,8 @@ class Geofire {
       _onKeyEntered.add(data);
     }else if (data["event"] == "EXITED"){
       _onKeyExited.add(data);
+    }else if (data["event"] == "GEOQUERY_READY"){
+      _onObserveReady.add(true);
     }
   }
 }
