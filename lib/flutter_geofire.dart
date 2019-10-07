@@ -25,7 +25,10 @@ class Geofire {
   StreamController<dynamic> _onKeyExited = new StreamController.broadcast(); 
   StreamController<dynamic> _onObserveReady = new StreamController.broadcast(); 
 
+  bool geoQueryActive;
+
   Future<bool> initialize(String path) async {
+    geoQueryActive = false;
     final dynamic r = await _methodChannel.invokeMethod('GeoFire.start', <String, dynamic>{"path": path});
     return r ?? false;
   }
@@ -57,6 +60,7 @@ class Geofire {
 
   Future<String> queryAtLocation(
     double lat, double lng, double radius) async {
+    geoQueryActive = true;
     final dynamic response = await _methodChannel.invokeMethod('queryAtLocation', {"lat": lat, "lng": lng, "radius": radius});
     _eventChannel.receiveBroadcastStream().listen((dynamic event) => _parseStream(event));
     String r = response.toString();
