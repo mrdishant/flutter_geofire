@@ -12,14 +12,14 @@ For Flutter plugins for other products, see [mrdishant@github](https://github.co
     import 'package:flutter/material.dart';
     import 'package:flutter/services.dart';
     import 'package:flutter_geofire/flutter_geofire.dart';
-       
+    
     void main() => runApp(MyApp());
     
     class MyApp extends StatefulWidget {
       @override
       _MyAppState createState() => _MyAppState();
     }
-     
+    
     class _MyAppState extends State<MyApp> {
       List<String> keysRetrieved = [];
     
@@ -32,29 +32,56 @@ For Flutter plugins for other products, see [mrdishant@github](https://github.co
       // Platform messages are asynchronous, so we initialize in an async method.
       Future<void> initPlatformState() async {
         String pathToReference = "Sites";
-
-    //Intializing geoFire
-    Geofire.initialize(pathToReference);
-
-    List<String> response;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    try {
-      response = await Geofire.queryAtLocation(30.730743, 76.774948, 5);
-    } on PlatformException {
-      response = 'Failed to get platform version.';
-    }
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
-
-    setState(() {
-      keysRetrieved = response;
-    });
+    
+        //Intializing geoFire
+        Geofire.initialize(pathToReference);
+    
+        // Platform messages may fail, so we use a try/catch PlatformException.
+        try {
+          Geofire.queryAtLocation(30.730743, 76.774948, 5).listen((map) {
+            print(map);
+            if (map != null) {
+              var callBack = map['callBack'];
+    
+              //latitude will be retrieved from map['latitude']
+              //longitude will be retrieved from map['longitude']
+    
+              switch (callBack) {
+                case Geofire.onKeyEntered:
+                  keysRetrieved.add(map["key"]);
+                  break;
+    
+                case Geofire.onKeyExited:
+                  keysRetrieved.remove(map["key"]);
+                  break;
+    
+                case Geofire.onKeyMoved:
+    //              keysRetrieved.add(map[callBack]);
+                  break;
+    
+                case Geofire.onGeoQueryReady:
+    //              map["result"].forEach((key){
+    //                keysRetrieved.add(key);
+    //              });
+    
+                  break;
+              }
+            }
+    
+            setState(() {});
+          }).onError((error) {
+            print(error);
+          });
+        } on PlatformException {
+    //      response = 'Failed to get platform version.';
+        }
+    
+        // If the widget was removed from the tree while the asynchronous platform
+        // message was in flight, we want to discard the reply rather than calling
+        // setState to update our non-existent appearance.
+        if (!mounted) return;
       }
-      
-
+    
       @override
       Widget build(BuildContext context) {
         return MaterialApp(
@@ -135,6 +162,21 @@ For Flutter plugins for other products, see [mrdishant@github](https://github.co
                       ),
                     ),
                   ),
+                  Padding(
+                    padding: EdgeInsets.all(10.0),
+                  ),
+                  Center(
+                    child: RaisedButton(
+                      onPressed: () {
+                        removeQueryListener();
+                      },
+                      color: Colors.blueAccent,
+                      child: Text(
+                        "Remove Query Listener",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
                 ],
               )),
         );
@@ -145,23 +187,29 @@ For Flutter plugins for other products, see [mrdishant@github](https://github.co
             new DateTime.now().millisecondsSinceEpoch.toString(),
             30.730743,
             76.774948);
-
-    print(response);
+    
+        print(response);
       }
-      
+    
       void setLocationFirst() async {
         bool response =
             await Geofire.setLocation("AsH28LWk8MXfwRLfVxgx", 30.730743, 76.774948);
     
         print(response);
       }
-      
+    
       void removeLocation() async {
         bool response = await Geofire.removeLocation("AsH28LWk8MXfwRLfVxgx");
     
         print(response);
       }
-       
+    
+      void removeQueryListener() async {
+        bool response = await Geofire.stopListener();
+    
+        print(response);
+      }
+    
       void getLocation() async {
         Map<String, dynamic> response =
             await Geofire.getLocation("AsH28LWk8MXfwRLfVxgx");
@@ -169,3 +217,4 @@ For Flutter plugins for other products, see [mrdishant@github](https://github.co
         print(response);
       }
     }
+

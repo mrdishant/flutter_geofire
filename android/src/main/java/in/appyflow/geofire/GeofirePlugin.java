@@ -51,7 +51,7 @@ public class GeofirePlugin implements MethodCallHandler, EventChannel.StreamHand
     @Override
     public void onMethodCall(MethodCall call, final Result result) {
 
-        Log.i("TAG",call.method.toString());
+        Log.i("TAG", call.method.toString());
 
         if (call.method.equals("GeoFire.start")) {
 
@@ -129,16 +129,14 @@ public class GeofirePlugin implements MethodCallHandler, EventChannel.StreamHand
 
         } else if (call.method.equals("queryAtLocation")) {
             geoFireArea(Double.parseDouble(call.argument("lat").toString()), Double.parseDouble(call.argument("lng").toString()), result, Double.parseDouble(call.argument("radius").toString()));
-        }
-        else if (call.method.equals("stopListener")) {
+        } else if (call.method.equals("stopListener")) {
 
-            if(geoQuery!=null){
+            if (geoQuery != null) {
                 geoQuery.removeAllListeners();
             }
 
             result.success(true);
-        }
-        else {
+        } else {
             result.notImplemented();
         }
     }
@@ -152,7 +150,13 @@ public class GeofirePlugin implements MethodCallHandler, EventChannel.StreamHand
         try {
 
             final ArrayList<String> arrayListKeys = new ArrayList<>();
-            geoQuery = geoFire.queryAtLocation(new GeoLocation(latitude, longitude), radius);
+
+            if (geoQuery != null) {
+                geoQuery.setLocation(new GeoLocation(latitude, longitude), radius);
+            } else {
+                geoQuery = geoFire.queryAtLocation(new GeoLocation(latitude, longitude), radius);
+            }
+
             geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
                 @Override
                 public void onKeyEntered(String key, GeoLocation location) {
@@ -160,9 +164,9 @@ public class GeofirePlugin implements MethodCallHandler, EventChannel.StreamHand
                     if (events != null) {
                         hashMap.clear();
                         hashMap.put("callBack", "onKeyEntered");
-                        hashMap.put("key",key);
-                        hashMap.put("latitude",location.latitude);
-                        hashMap.put("longitude",location.longitude);
+                        hashMap.put("key", key);
+                        hashMap.put("latitude", location.latitude);
+                        hashMap.put("longitude", location.longitude);
                         events.success(hashMap);
                     } else {
                         geoQuery.removeAllListeners();
@@ -180,7 +184,7 @@ public class GeofirePlugin implements MethodCallHandler, EventChannel.StreamHand
 
                         hashMap.clear();
                         hashMap.put("callBack", "onKeyExited");
-                        hashMap.put("key",key);
+                        hashMap.put("key", key);
                         events.success(hashMap);
                     } else {
                         geoQuery.removeAllListeners();
@@ -195,9 +199,9 @@ public class GeofirePlugin implements MethodCallHandler, EventChannel.StreamHand
                         hashMap.clear();
 
                         hashMap.put("callBack", "onKeyMoved");
-                        hashMap.put("key",key);
-                        hashMap.put("latitude",location.latitude);
-                        hashMap.put("longitude",location.longitude);
+                        hashMap.put("key", key);
+                        hashMap.put("latitude", location.latitude);
+                        hashMap.put("longitude", location.longitude);
 
                         events.success(hashMap);
                     } else {
@@ -215,7 +219,7 @@ public class GeofirePlugin implements MethodCallHandler, EventChannel.StreamHand
                         hashMap.clear();
 
                         hashMap.put("callBack", "onGeoQueryReady");
-                        hashMap.put("result",arrayListKeys);
+                        hashMap.put("result", arrayListKeys);
 
                         events.success(hashMap);
 

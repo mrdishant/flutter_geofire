@@ -1,3 +1,7 @@
+## 1.0.3
+
+* Swift 5.1 Support Added + Firebase Support Files Problem Solved
+
 ## 1.0.0
 
 * Remove Query Listeners Feature added

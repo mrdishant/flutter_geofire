@@ -186,7 +186,7 @@ public class SwiftGeofirePlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
             
             param["callBack"] = "onGeoQueryReady"
             param["result"] = key
-            self.eventSink!(key)
+            self.eventSink!(param)
             
         }
     }
