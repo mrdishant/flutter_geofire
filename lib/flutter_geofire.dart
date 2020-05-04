@@ -68,4 +68,14 @@ class Geofire {
     }
     return _queryAtLocation;
   }
+
+  /*
+  Update the query with the specified lat/lng and radius without the need to re-start the listner.
+  */
+  static Future<bool> updateQuery(
+      double latitude, double longitude, double radius) async {
+    final bool isSet = await _channel.invokeMethod('updateQuery',
+        <String, dynamic>{"lat": latitude, "lng": longitude, "radius": radius});
+    return isSet;
+  }
 }
