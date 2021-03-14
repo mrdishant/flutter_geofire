@@ -102,18 +102,18 @@ To remove listeners to all queries:
 
     print(response);
 
-#### Removing a location
+## Removing a location
 To remove a location and delete it from the database simply pass the location's key to removeLocation:
 
     bool response = await Geofire.removeLocation("AsH28LWk8MXfwRLfVxgx");
 
     print(response);                
 
-#### Contributing
+## Contributing
 if you want to contribute to GeoFire, clone the repository and just start making pull requests.
 
     git clone 'https://github.com/mrdishant/flutter_geofire'
 
-##### This plugin is in development suggestions are welcome. Happy Coding!!!
+### This plugin is in development and suggestions are most welcome. Happy Coding and Be Exceptional !!
 
 

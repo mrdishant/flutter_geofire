@@ -1,3 +1,8 @@
+## 1.0.4
+
+* Added Null Safety
+* Upgraded GeoFire Dependency in Android and iOS
+
 ## 1.0.3
 
 * Swift 5.1 Support Added + Firebase Support Files Problem Solved

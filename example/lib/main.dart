@@ -33,7 +33,6 @@ class _MyAppState extends State<MyApp> {
         print(map);
         if (map != null) {
           var callBack = map['callBack'];
-          ;
 
           //latitude will be retrieved from map['latitude']
           //longitude will be retrieved from map['longitude']
@@ -157,6 +156,21 @@ class _MyAppState extends State<MyApp> {
               Padding(
                 padding: EdgeInsets.all(10.0),
               ),
+              // Center(
+              //   child: RaisedButton(
+              //     onPressed: () {
+              //       initPlatformState();
+              //     },
+              //     color: Colors.blueAccent,
+              //     child: Text(
+              //       "Register Listener",
+              //       style: TextStyle(color: Colors.white),
+              //     ),
+              //   ),
+              // ),
+              // Padding(
+              //   padding: EdgeInsets.all(10.0),
+              // ),
               Center(
                 child: RaisedButton(
                   onPressed: () {
@@ -198,6 +212,9 @@ class _MyAppState extends State<MyApp> {
 
   void removeQueryListener() async {
     bool response = await Geofire.stopListener();
+
+    keysRetrieved.clear();
+    setState(() {});
 
     print(response);
   }

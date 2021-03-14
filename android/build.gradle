@@ -8,7 +8,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.4.2'
+        classpath 'com.android.tools.build:gradle:4.1.2'
     }
 }
 
@@ -35,6 +35,5 @@ android {
 
 
 dependencies {
-    implementation 'com.firebase:geofire-android:2.3.1'
-    implementation 'com.google.firebase:firebase-database:18.0.1'
+    implementation 'com.firebase:geofire-android:3.1.0'
 }

@@ -12,7 +12,7 @@ class Geofire {
   static const onKeyMoved = "onKeyMoved";
   static const onKeyExited = "onKeyExited";
 
-  static Stream<dynamic> _queryAtLocation;
+  static Stream<dynamic>? _queryAtLocation;
 
   static Future<bool> initialize(String path) async {
     final dynamic r = await _channel
@@ -20,28 +20,28 @@ class Geofire {
     return r ?? false;
   }
 
-  static Future<bool> setLocation(
+  static Future<bool?> setLocation(
       String id, double latitude, double longitude) async {
-    final bool isSet = await _channel.invokeMethod('setLocation',
+    final bool? isSet = await _channel.invokeMethod('setLocation',
         <String, dynamic>{"id": id, "lat": latitude, "lng": longitude});
     return isSet;
   }
 
-  static Future<bool> removeLocation(String id) async {
-    final bool isSet = await _channel
+  static Future<bool?> removeLocation(String id) async {
+    final bool? isSet = await _channel
         .invokeMethod('removeLocation', <String, dynamic>{"id": id});
     return isSet;
   }
 
-  static Future<bool> stopListener() async {
-    final bool isSet =
+  static Future<bool?> stopListener() async {
+    final bool? isSet =
         await _channel.invokeMethod('stopListener', <String, dynamic>{});
     return isSet;
   }
 
   static Future<Map<String, dynamic>> getLocation(String id) async {
-    final Map<dynamic, dynamic> response =
-        await _channel.invokeMethod('getLocation', <String, dynamic>{"id": id});
+    final Map<dynamic, dynamic> response = await (_channel
+        .invokeMethod('getLocation', <String, dynamic>{"id": id}));
 
     Map<String, dynamic> location = new Map();
 
@@ -49,18 +49,18 @@ class Geofire {
       location[key] = value;
     });
 
-    print(location);
+    // print(location);
 
     return location;
   }
 
-  static Stream<dynamic> queryAtLocation(
+  static Stream<dynamic>? queryAtLocation(
       double lat, double lng, double radius) {
     _channel.invokeMethod('queryAtLocation',
         {"lat": lat, "lng": lng, "radius": radius}).then((result) {
-      print("result" + result);
+      // print("result" + result);
     }).catchError((error) {
-      print("Error " + error);
+      // print("Error " + error);
     });
 
     if (_queryAtLocation == null) {
