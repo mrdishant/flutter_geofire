@@ -1,4 +1,4 @@
-## 1.0.4
+## 2.0.0
 
 * Added Null Safety
 * Upgraded GeoFire Dependency in Android and iOS

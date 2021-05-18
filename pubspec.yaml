@@ -1,12 +1,12 @@
 name: flutter_geofire
 description: A Flutter plugin to get the realtime updates of places nearby. GeoFire is an open-source library for that allows you to store and query a set of keys based on their geographic location.
-version: 1.0.3
-author: "Dishant Mahajan <mr.dishantmahajan@gmail.com>"
+version: 2.0.0
 homepage: "https://github.com/mrdishant/flutter_geofire"
 
 
 environment:
   sdk: '>=2.12.0 <3.0.0'
+  flutter: ">=1.12.0"
 
 dependencies:
   flutter:
@@ -18,8 +18,12 @@ dependencies:
 # The following section is specific to Flutter.
 flutter:
   plugin:
-    androidPackage: in.appyflow.geofire
-    pluginClass: GeofirePlugin
+    platforms:
+      android:
+        package: in.appyflow.geofire
+        pluginClass: GeofirePlugin
+      ios:
+        pluginClass: GeofirePlugin
 
   # To add assets to your plugin package, add an assets section, like this:
   # assets:
