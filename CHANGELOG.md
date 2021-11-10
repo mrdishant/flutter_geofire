@@ -1,3 +1,8 @@
+## 2.0.1
+
+* Android V2 support added
+* Bug fixes
+
 ## 2.0.0
 
 * Added Null Safety

@@ -3,6 +3,8 @@ package in.appyflow.geofire;
 import android.util.Log;
 
 
+import androidx.annotation.NonNull;
+
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;
@@ -16,6 +18,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 
+import io.flutter.embedding.engine.plugins.FlutterPlugin;
+import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.EventChannel;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
@@ -26,27 +30,32 @@ import io.flutter.plugin.common.PluginRegistry.Registrar;
 /**
  * GeofirePlugin
  */
-public class GeofirePlugin implements MethodCallHandler, EventChannel.StreamHandler {
+public class GeofirePlugin implements FlutterPlugin,MethodCallHandler, EventChannel.StreamHandler {
 
     GeoFire geoFire;
     DatabaseReference databaseReference;
-
+    static MethodChannel channel;
+    static EventChannel eventChannel;
     private EventChannel.EventSink events;
 
     /**
      * Plugin registration.
      */
-    public static void registerWith(Registrar registrar) {
 
+    public static void pluginInit(BinaryMessenger messenger){
         GeofirePlugin geofirePlugin = new GeofirePlugin();
 
-        final MethodChannel channel = new MethodChannel(registrar.messenger(), "geofire");
+        channel = new MethodChannel(messenger, "geofire");
         channel.setMethodCallHandler(geofirePlugin);
 
-        EventChannel eventChannel = new EventChannel(registrar.messenger(), "geofireStream");
+        eventChannel = new EventChannel(messenger, "geofireStream");
         eventChannel.setStreamHandler(geofirePlugin);
 
     }
+
+//    public static void registerWith(Registrar registrar) {
+//        pluginInit(registrar.messenger());
+//    }
 
     @Override
     public void onMethodCall(MethodCall call, final Result result) {
@@ -259,5 +268,16 @@ public class GeofirePlugin implements MethodCallHandler, EventChannel.StreamHand
         geoQuery.removeAllListeners();
         events = null;
 
+    }
+
+    @Override
+    public void onAttachedToEngine(@NonNull FlutterPluginBinding binding) {
+        pluginInit(binding.getBinaryMessenger());
+    }
+
+    @Override
+    public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
+        channel.setMethodCallHandler(null);
+        eventChannel.setStreamHandler(null);
     }
 }
