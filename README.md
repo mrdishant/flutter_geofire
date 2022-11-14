@@ -9,9 +9,10 @@ Note: This plugin is still under development, and some APIs might not be availab
 ## iOS Installation
 In your project's pod file add the below line
 
-# pod 'GeoFire', :git => 'https://github.com/mrdishant/geofire-objc'
+### pod 'GeoFire', :git => 'https://github.com/mrdishant/geofire-objc'
 
 Example:
+```
             target 'Runner' do
             use_frameworks!
             use_modular_headers!
@@ -19,7 +20,7 @@ Example:
             
             flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
             end
-
+```
 
 
 ## Usage
