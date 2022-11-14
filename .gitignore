@@ -8,7 +8,5 @@ pubspec.lock
 .idea/
 
 build/
-
-android/
-
-ios/
+example/android/app/google-services.json
+example/ios/Runner/GoogleService-Info.plist

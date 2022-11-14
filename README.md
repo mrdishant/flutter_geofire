@@ -6,6 +6,22 @@ For Flutter plugins for other products, see [mrdishant@github](https://github.co
 
 Note: This plugin is still under development, and some APIs might not be available yet. Feedback and Pull Requests are most welcome!
 
+## iOS Installation
+In your project's pod file add the below line
+
+# pod 'GeoFire', :git => 'https://github.com/mrdishant/geofire-objc'
+
+Example:
+            target 'Runner' do
+            use_frameworks!
+            use_modular_headers!
+            pod 'GeoFire', :git => 'https://github.com/mrdishant/geofire-objc'
+            
+            flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
+            end
+
+
+
 ## Usage
 
 GeoFire  — Realtime location queries with Firebase.

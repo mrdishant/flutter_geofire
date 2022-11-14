@@ -1,6 +1,6 @@
 name: flutter_geofire
 description: A Flutter plugin to get the realtime updates of places nearby. GeoFire is an open-source library for that allows you to store and query a set of keys based on their geographic location.
-version: 2.0.1
+version: 2.0.2
 homepage: "https://github.com/mrdishant/flutter_geofire"
 
 

@@ -20,7 +20,7 @@ A Flutter plugin to get the realtime updates of places nearby.
 
   s.static_framework = true
 
-  s.ios.deployment_target = '11.0'
+  s.ios.deployment_target = '12.0'
 
   
 

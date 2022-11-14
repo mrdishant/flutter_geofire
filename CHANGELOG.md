@@ -1,3 +1,8 @@
+## 2.0.2
+
+* iOS Dependency issue fixed: Check example app pod file
+* Bug fixes
+
 ## 2.0.1
 
 * Android V2 support added
