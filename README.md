@@ -104,12 +104,12 @@ GeoFire allows you to query all keys within a geographic area using GeoQuery obj
     
                 case Geofire.onGeoQueryReady:
                 // All Intial Data is loaded
-                print(map['result'])
+                print(map['result']);
     
                   break;
               }
             }
-    
+    });
             setState(() {});
 
 #### Stop Listening to Geo Query
