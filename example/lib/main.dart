@@ -29,7 +29,7 @@ class _MyAppState extends State<MyApp> {
 
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
-      Geofire.queryAtLocation(30.730743, 76.774948, 5).listen((map) {
+      Geofire.queryAtLocation(30.730743, 76.774948, 5)?.listen((map) {
         print(map);
         if (map != null) {
           var callBack = map['callBack'];
@@ -199,7 +199,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   void setLocation() async {
-    bool response = await Geofire.setLocation(
+    bool? response = await Geofire.setLocation(
         new DateTime.now().millisecondsSinceEpoch.toString(),
         30.730743,
         76.774948);
@@ -208,20 +208,20 @@ class _MyAppState extends State<MyApp> {
   }
 
   void setLocationFirst() async {
-    bool response =
+    bool? response =
         await Geofire.setLocation("AsH28LWk8MXfwRLfVxgx", 30.730743, 76.774948);
 
     print(response);
   }
 
   void removeLocation() async {
-    bool response = await Geofire.removeLocation("AsH28LWk8MXfwRLfVxgx");
+    bool? response = await Geofire.removeLocation("AsH28LWk8MXfwRLfVxgx");
 
     print(response);
   }
 
   void removeQueryListener() async {
-    bool response = await Geofire.stopListener();
+    bool? response = await Geofire.stopListener();
 
     keysRetrieved.clear();
     setState(() {});
