@@ -15,7 +15,7 @@ buildscript {
 apply plugin: 'com.android.library'
 
 android {
-    namespace 'in.appyflow.geofire'
+    namespace "in.appyflow.geofire"
     compileSdkVersion 33
 
     defaultConfig {
