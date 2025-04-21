@@ -1,0 +1,2 @@
+/Users/dishant/Work/Projects/Plugins/flutter_geofire/example/android/app/.cxx/Debug/u3py1s28/x86/CMakeFiles/edit_cache.dir
+/Users/dishant/Work/Projects/Plugins/flutter_geofire/example/android/app/.cxx/Debug/u3py1s28/x86/CMakeFiles/rebuild_cache.dir

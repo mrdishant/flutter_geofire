@@ -1,6 +1,22 @@
-## 2.0.2
+## 2.0.6
+
+* Android issue fixed
+
+## 2.0.5
+
+* iOS latest compatibility
+
+## 2.0.4
+
+* Android latest compatibility
+
+## 2.0.3
 
 * iOS Dependency issue fixed: Check example app pod file
+* Bug fixes
+
+## 2.0.2
+
 * Bug fixes
 
 ## 2.0.1
