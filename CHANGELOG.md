@@ -1,3 +1,7 @@
+## 2.0.7
+
+* Android and iOS latest versions
+
 ## 2.0.6
 
 * Android issue fixed
