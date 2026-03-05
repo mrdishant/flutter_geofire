@@ -123,7 +123,9 @@ public class SwiftGeofirePlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
     
     
     if(call.method.elementsEqual("queryAtLocation")){
-        
+        // Prevent overlapping listeners.
+        circleQuery?.removeAllObservers()
+        circleQuery = nil
         
         let lat = arguements!["lat"] as! Double
         let lng = arguements!["lng"] as! Double
@@ -146,7 +148,9 @@ public class SwiftGeofirePlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
             key.append(parkingKey)
             print("Key is \(parkingKey)")
             
-            self.eventSink!(param)
+            if let sink = self.eventSink {
+                sink(param)
+            }
             
         })
         
@@ -162,7 +166,9 @@ public class SwiftGeofirePlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
             key.append(parkingKey)
             print("Key is \(parkingKey)")
             
-            self.eventSink!(param)
+            if let sink = self.eventSink {
+                sink(param)
+            }
             
         })
         
@@ -175,7 +181,9 @@ public class SwiftGeofirePlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
             param["latitude"] = location.coordinate.latitude
             param["longitude"] = location.coordinate.longitude
             
-            self.eventSink!(param)
+            if let sink = self.eventSink {
+                sink(param)
+            }
             
         })
         
@@ -186,7 +194,10 @@ public class SwiftGeofirePlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
             
             param["callBack"] = "onGeoQueryReady"
             param["result"] = key
-            self.eventSink!(param)
+
+            if let sink = self.eventSink {
+                sink(param)
+            }
             
         }
     }
@@ -194,17 +205,19 @@ public class SwiftGeofirePlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
   }
 
 
-   public func onListen(withArguments arguments: Any?,
-                       eventSink: @escaping FlutterEventSink) -> FlutterError? {
-    self.eventSink = eventSink
-    return nil
-  }
-
-  public func onCancel(withArguments arguments: Any?) -> FlutterError? {
-      eventSink = nil
-      return nil
+    public func onListen(withArguments arguments: Any?,
+                        eventSink: @escaping FlutterEventSink) -> FlutterError? {
+        self.eventSink = eventSink
+        return nil
     }
 
-
+    /*This removes the Firebase observers when Flutter detaches.
+    Without this, the race conditions are possible.*/
+    public func onCancel(withArguments arguments: Any?) -> FlutterError? {
+        circleQuery?.removeAllObservers()
+        circleQuery = nil
+        eventSink = nil
+        return nil
+    }
 
 }
