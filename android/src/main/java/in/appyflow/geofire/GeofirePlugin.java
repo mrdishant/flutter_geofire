@@ -169,6 +169,12 @@ public class GeofirePlugin implements FlutterPlugin,MethodCallHandler, EventChan
                 @Override
                 public void onKeyEntered(String key, GeoLocation location) {
 
+                    // Prevent duplicates
+                    // This eliminates the AssertionError crash
+                    if (arrayListKeys.contains(key)) {
+                        return; // ignore repeated event
+                    }
+
                     if (events != null) {
                         hashMap.clear();
                         hashMap.put("callBack", "onKeyEntered");
@@ -186,6 +192,9 @@ public class GeofirePlugin implements FlutterPlugin,MethodCallHandler, EventChan
 
                 @Override
                 public void onKeyExited(String key) {
+                    // Remove safely without assuming the key is present
+                    if (!arrayListKeys.contains(key)) return; // ignore if not tracked
+
                     arrayListKeys.remove(key);
 
                     if (events != null) {
@@ -202,6 +211,9 @@ public class GeofirePlugin implements FlutterPlugin,MethodCallHandler, EventChan
 
                 @Override
                 public void onKeyMoved(String key, GeoLocation location) {
+
+                    // Make sure the key exists before sending an event
+                    if (!arrayListKeys.contains(key)) return; // ignore if not tracked
 
                     if (events != null) {
                         hashMap.clear();
@@ -263,10 +275,11 @@ public class GeofirePlugin implements FlutterPlugin,MethodCallHandler, EventChan
 
     @Override
     public void onCancel(Object o) {
-
-        geoQuery.removeAllListeners();
+        if (geoQuery != null) {
+            geoQuery.removeAllListeners();
+            geoQuery = null; // Avoid stale references
+        }
         events = null;
-
     }
 
     @Override
