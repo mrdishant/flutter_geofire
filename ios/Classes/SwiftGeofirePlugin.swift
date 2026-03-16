@@ -120,6 +120,16 @@ public class SwiftGeofirePlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
         
         
     }
+
+    else if (call.method.elementsEqual("updateQuery")) {
+        //Update the query with the specified lat/lng and radius without the need to re-start the listner.
+        let lat = arguements!["lat"] as! Double
+        let lng = arguements!["lng"] as! Double
+        let radius = arguements!["radius"] as! Double
+        circleQuery?.center = CLLocation(latitude: lat, longitude: lng)
+        circleQuery?.radius = radius
+        result(true)
+    }
     
     
     if(call.method.elementsEqual("queryAtLocation")){
